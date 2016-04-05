@@ -1,103 +1,53 @@
-const undoable = require("redux-undo").default;
-
-const INITIAL_DIRECTIONS = "1. Step 1\n2. Step 2";
-
 const DEFAULT_STATE = {
-  CurrentFile: {
-    empty: false,
-    path: "untitled.md",
-    frontmatter: {
-      title: "",
-      author: "",
-      date: new Date().toString()
-    },
-    content: ""
-  },
-  Project: {
-    path: "./tmp",
-    name: "My project",
-    files: [
-      "untitled.md"
-    ],
-    schema: [
-      {
-        key: "title",
-        type: "text",
-        label: "Title",
-        value: ""
-      },
-      {
-        key: "author",
-        type: "text",
-        label: "Author",
-        value: ""
-      },
-      {
-        key: "date",
-        type: "text",
-        label: "Date",
-        value: ""
-      }
-    ]
+  Tabs: {
+    activeTabId: null,
+    rows: new Map()
   }
 };
 
-const undoableConfig = {
-  initTypes: ["OPEN_FILE_RESPONSE"]
-};
+// TODO: add to utils
+const app = platform_require("electron").remote.app;
+function defaultTab() {
+  return {
+    url: app._basePath + "/newtab.html",
+    displayUrl: "",
+    placeholder: "about:newtab",
+    title: ""
+  };
+}
+function guid() {
+  function s4() {
+    return Math.floor((1 + Math.random()) * 0x10000)
+      .toString(16)
+      .substring(1);
+  }
+  return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+    s4() + '-' + s4() + s4() + s4();
+}
+
 
 module.exports = {
-  CurrentFile: undoable((prevState = DEFAULT_STATE.CurrentFile, action) => {
-    switch(action.type) {
-      case "OPEN_PROJECT_RESPONSE":
-        return {
-          empty: true,
-          path: "",
-          frontmatter: {},
-          content: ""
-        };
-      case "OPEN_FILE_RESPONSE":
-        if (action.error) {
-          console.error(action.data);
-          return prevState;
-        } else {
-          return {
-            empty: false,
-            path: action.data.path,
-            frontmatter: action.data.frontmatter,
-            content: action.data.content
-          };
-        }
-      case "EDITOR_VALUE_UPDATE":
-        return Object.assign({}, prevState, {
-          frontmatter: Object.assign({}, prevState.frontmatter, action.data)
-        });
-      case "CONTENT_VALUE_UPDATE":
-        return Object.assign({}, prevState, {
-          content: action.data
-        });
+  Tabs(prevState = DEFAULT_STATE.Tabs, action) {
+    const rows = new Map(prevState.rows);
+    let activeTabId;
+    let id;
+    switch (action.type) {
+      case "ADD_TAB":
+        id = guid();
+        rows.set(id, defaultTab());
+        return {activeTabId: id, rows};
+      case "REMOVE_TAB":
+        rows.delete(action.data.id);
+        activeTabId = (action.data.id === prevState.activeTabId) ? rows.keys().next().value : prevState.activeTabId;
+        return {activeTabId, rows};
+      case "UPDATE_TAB":
+        rows.set(action.data.id, Object.assign(rows.get(action.data.id), action.data.props));
+        return Object.assign({}, prevState, {rows});
+      case "SELECT_TAB":
+        activeTabId = action.data.id;
+        return Object.assign({}, prevState, {activeTabId});
       default:
         return prevState;
     }
-  }, undoableConfig),
-  Project(prevState = DEFAULT_STATE.Project, action) {
-    switch(action.type) {
-      case "OPEN_PROJECT_RESPONSE":
-        if (action.error) {
-          console.error(action.data);
-          return prevState;
-        } else {
-          const newState = Object.assign({}, prevState, {
-            path: action.data.path,
-            name: action.data.name,
-            files: action.data.files,
-            schema: action.data.schema
-          });
-          return newState
-        }
-      default:
-        return prevState;
-    }
-
   }
-};
+}

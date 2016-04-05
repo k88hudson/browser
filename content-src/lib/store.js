@@ -20,12 +20,12 @@ const middleware = [
 
 const store = createStore(
   combineReducers(reducers),
-  autoRehydrate(),
+  // autoRehydrate(),
   applyMiddleware(...middleware)
 );
 
 Channel.connectStore(store);
 
-persistStore(store);
+// persistStore(store);
 
 module.exports = store;
