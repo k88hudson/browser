@@ -18,6 +18,7 @@ body {
   font-size: 14px;
   margin: 0;
   padding: 0;
+  overflow: hidden;
 }
 
 #root > div {
@@ -31,6 +32,10 @@ input, textarea, button {
   font-family: inherit;
   font-size: inherit;
   color: inherit;
+}
+
+button {
+  cursor: pointer;
 }
 
 label {
@@ -79,9 +84,10 @@ input, textarea {
   border-radius: 3px;
   border: 1px solid #DDD;
   background: white;
+  transition: border-color 0.2s ease;
   &:focus {
     outline: none;
-    border-color: #E61F72;
+    border-color: #1388F9;
   }
 }
 
@@ -194,6 +200,7 @@ textarea {
   padding: 8px;
   padding-left: 30px;
   position: relative;
+  border-bottom: 1px solid #B3B3B3;
   .back-button {
     $button-size: 35px;
     -webkit-appearance: none;
@@ -209,7 +216,7 @@ textarea {
     align-items: center;
     justify-content: center;
     font-size: 18px;
-    color: #9E9E9E;
+    color: #696969;
   }
   input {
     padding-left: 20px;
