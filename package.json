@@ -22,7 +22,7 @@
     "babel-loader": "^6.2.4",
     "babel-plugin-transform-es2015-destructuring": "^6.6.5",
     "babel-preset-react": "^6.5.0",
-    "electron-prebuilt": "^0.36.0",
+    "electron-prebuilt": "^0.37.4",
     "path-chunk-webpack-plugin": "^1.0.0",
     "webpack": "^1.12.14"
   },

@@ -20,15 +20,17 @@ const Main = React.createClass({
     this.props.dispatch(actions.UpdateTab(id, newProps));
   },
   setUrl(id, url) {
+    if (/\s/.test(url) || !/\./.test(url)) {
+      url = "https://google.com?gws_rd=ssl#q=" + encodeURIComponent(url);
+    }
     const parsed = urlParse(url, "http://");
-    console.log(parsed);
     url = parsed.href;
     if (url === this.props.Tabs.rows.get(id).url) return;
     const displayUrl = url.replace(parsed.protocol + "//", "");
     this.updateTab(id, {url, displayUrl});
   },
   addTab() {
-    this.props.dispatch(actions.addTab());
+    this.props.dispatch(actions.AddTab());
   },
   render() {
     const tabs = this.props.Tabs.rows;

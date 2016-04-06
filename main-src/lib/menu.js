@@ -77,7 +77,7 @@ const template = [
         }
       },
       {
-        label: 'Toggle Developer Tools',
+        label: 'Show Developer Tools',
         accelerator: (function() {
           if (process.platform == 'darwin')
             return 'Alt+Command+I';
@@ -88,6 +88,19 @@ const template = [
           channel.send(actions.OpenInspector());
         }
       },
+      {
+        label: 'Show Browser Debugger',
+        accelerator: (function() {
+          if (process.platform == 'darwin')
+            return 'Alt+Command+J';
+          else
+            return 'Ctrl+Shift+J';
+        })(),
+        click: function(item, focusedWindow) {
+          if (focusedWindow)
+            focusedWindow.toggleDevTools();
+        }
+      }
     ]
   },
   {
