@@ -5,7 +5,7 @@
   "description": "A browser",
   "main": "main.js",
   "scripts": {
-    "start": "npm run css && npm run css -- -w & webpack -w & electron main.js",
+    "start": "NODE_ENV=development npm run css && npm run css -- -w & webpack -w & electron main.js",
     "css": "node-sass content-src/content-main.scss -o data"
   },
   "repository": {},
@@ -16,12 +16,13 @@
   },
   "homepage": "https://github.com/atom/electron-quick-start#readme",
   "devDependencies": {
-    "babel-plugin-transform-es2015-parameters": "^6.7.0",
-    "babel-plugin-transform-strict-mode": "^6.6.5",
     "babel-core": "^6.7.0",
     "babel-loader": "^6.2.4",
     "babel-plugin-transform-es2015-destructuring": "^6.6.5",
+    "babel-plugin-transform-es2015-parameters": "^6.7.0",
+    "babel-plugin-transform-strict-mode": "^6.6.5",
     "babel-preset-react": "^6.5.0",
+    "electron-packager": "^6.0.0",
     "electron-prebuilt": "^0.37.4",
     "path-chunk-webpack-plugin": "^1.0.0",
     "webpack": "^1.12.14"

@@ -8,8 +8,6 @@ let mainWindow = null;
 
 app._basePath = 'file://' + __dirname;
 
-
-
 function createWindow () {
   menu();
   mainWindow = new BrowserWindow({
@@ -26,8 +24,6 @@ function createWindow () {
   // mainWindow.setMenuBarVisibility(false);
   // mainWindow.setAutoHideMenuBar(true);
 }
-
-
 
 app.on('ready', () => {
   createWindow();
