@@ -68,7 +68,7 @@ const WebView = React.createClass({
         className="webview"
         src={this.props.url}
         autosize="on" />
-      <div className="inspector">
+      <div hidden={!this.props.Inspector.visible} className="inspector">
         <pre>{JSON.stringify(this.state.metadata, null, 2)}</pre>
         <img hidden={!this.state.metadata.favicon} height={24} width={24} src={this.state.metadata.favicon} />
         <img hidden={!this.state.metadata.ogimage} height={150} src={this.state.metadata.ogimage} />

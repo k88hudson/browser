@@ -3,42 +3,32 @@ const {connect} = require("react-redux");
 const classnames = require("classnames")
 const WebView = require("components/WebView");
 const urlParse = require("url-parse");
+const actions = require("common/actions/actions");
 
 const Main = React.createClass({
-  getInitialState() {
-    return {};
-  },
   removeTabFactory(id) {
     return e => {
       e.stopPropagation();
       e.preventDefault();
-      this.props.dispatch({
-        type: "REMOVE_TAB",
-        data: {id}
-      });
+      this.props.dispatch(actions.RemoveTab(id));
     };
   },
   setActiveTab(id) {
-    this.props.dispatch({
-      type: "SELECT_TAB",
-      data: {id}
-    });
+    this.props.dispatch(actions.SelectTab(id));
   },
   updateTab(id, newProps) {
-    this.props.dispatch({
-      type: "UPDATE_TAB",
-      data: {id, props: newProps}
-    });
+    this.props.dispatch(actions.UpdateTab(id, newProps));
   },
   setUrl(id, url) {
     const parsed = urlParse(url, "http://");
+    console.log(parsed);
     url = parsed.href;
     if (url === this.props.Tabs.rows.get(id).url) return;
     const displayUrl = url.replace(parsed.protocol + "//", "");
     this.updateTab(id, {url, displayUrl});
   },
   addTab() {
-    this.props.dispatch({type: "ADD_TAB"});
+    this.props.dispatch(actions.addTab());
   },
   render() {
     const tabs = this.props.Tabs.rows;
@@ -59,7 +49,7 @@ const Main = React.createClass({
             </button>
           </div>);
         })}
-        <button onClick={this.addTab} className="transparent"><span className="fa fa-plus" /></button>
+        <button onClick={this.addTab} className="add-tab-btn transparent"><span className="fa fa-plus" /></button>
       </div>
       {tabIds.map(id => {
         const tab = tabs.get(id);
@@ -70,6 +60,7 @@ const Main = React.createClass({
           active={id === activeTabId}
           setUrl={url => this.setUrl(id, url)}
           updateTab={updates => this.updateTab(id, updates)}
+          Inspector={this.props.Inspector}
         />);
       })}
 
@@ -78,5 +69,6 @@ const Main = React.createClass({
 });
 
 module.exports = connect(state => ({
+  Inspector: state.Inspector,
   Tabs: state.Tabs
 }))(Main);

@@ -4,6 +4,17 @@ const ActionCreators = require("redux-undo").ActionCreators;
 const OUTGOING_EVENT = "content-to-main";
 const INCOMING_EVENT = "main-to-content";
 
+function NotifyContent(type, data) {
+  const action = {
+    type,
+    meta: {broadcast: INCOMING_EVENT}
+  };
+  if (data) {
+    action.data = data;
+  }
+  return action;
+}
+
 function Response(type, data, options) {
   options = options || {};
   const action = {
@@ -32,60 +43,39 @@ function RequestExpect(type, expect, options) {
   return action;
 }
 
-function UpdateFrontMatter(key, value) {
-  let update;
-  if (typeof key === "string") {
-    update = {};
-    update[key] = value;
-  } else if (key && typeof key === "object"){
-    update = key;
-  }
+function OpenInspector() {
+  return NotifyContent("NOTIFY_OPEN_INSPECTOR");
+}
+
+function RemoveTab(id) {
   return {
-    type: "EDITOR_VALUE_UPDATE",
-    data: update
+    type: "REMOVE_TAB",
+    data: {id}
   };
 }
 
-function UpdateContent(value) {
+function SelectTab(id) {
   return {
-    type: "CONTENT_VALUE_UPDATE",
-    data: value
+    type: "SELECT_TAB",
+    data: {id}
   };
 }
 
-function ImageRequest(filePath) {
-  return RequestExpect("POST_IMAGE_REQUEST", "POST_IMAGE_RESPONSE", {path: filePath});
+function UpdateTab(id, props) {
+  return {
+    type: "UPDATE_TAB",
+    data: {id, props}
+  };
 }
 
-function ImageResponse(data, options) {
-  return Response("POST_IMAGE_RESPONSE", data, options);
-}
-
-function OpenFileRequest(filePath) {
-  return RequestExpect("OPEN_FILE_REQUEST", "OPEN_FILE_RESPONSE", {data: {path: filePath}});
-}
-
-function OpenFileResponse(data, options) {
-  return Response("OPEN_FILE_RESPONSE", data, options);
-}
-
-function OpenProjectRequest(filePath) {
-  return RequestExpect("OPEN_PROJECT_REQUEST", "OPEN_PROJECT_RESPONSE", {data: {path: filePath}});
-}
-
-function OpenProjectResponse(data, options) {
-  return Response("OPEN_PROJECT_RESPONSE", data, options);
+function AddTab() {
+  return {type: "ADD_TAB"};
 }
 
 module.exports = {
-  UpdateFrontMatter,
-  UpdateContent,
-  ImageRequest,
-  ImageResponse,
-  OpenFileRequest,
-  OpenFileResponse,
-  OpenProjectRequest,
-  OpenProjectResponse,
-  Undo: ActionCreators.undo,
-  Redo: ActionCreators.redo
+  OpenInspector,
+  RemoveTab,
+  SelectTab,
+  UpdateTab,
+  AddTab
 };

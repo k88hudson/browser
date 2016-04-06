@@ -144,6 +144,7 @@ textarea {
       border-top: 1px solid transparent;
       background-size: contain;
       background-repeat: repeat-x;
+      padding-right: 5px;
       .title {
         white-space: nowrap;
         text-overflow: ellipsis;
@@ -170,16 +171,22 @@ textarea {
     border-bottom: none;
     position: relative;
     bottom: -1px;
+    .delete {
+      cursor: pointer;
+      z-index: 2;
+      position: absolute;
+      right: -10px;
+      top: 5px;
+      opacity: 0;
+      padding: 3px;
+    }
+    &.active:hover {
+      .delete {
+        opacity: 0.5;
+      }
+    }
   }
-  .delete {
-    cursor: pointer;
-    z-index: 2;
-    position: absolute;
-    right: -10px;
-    top: 5px;
-    opacity: 0.5;
-    padding: 3px;
-  }
+
 }
 .url-bar {
   flex-shrink: 0;
@@ -208,6 +215,11 @@ textarea {
     padding-left: 20px;
   }
 }
+
+.add-tab-btn {
+  margin-left: -15px;
+}
+
 .inspector {
   padding: 20px;
   background: #282C34;

@@ -1,5 +1,4 @@
 const electron = require("electron");
-const readProject = require("./fileUtils").readProject;
 const actions = require("../../common/actions/actions");
 const channel = require("./channel");
 const app = electron.app;
@@ -8,41 +7,13 @@ const Menu = electron.Menu;
 
 const template = [
   {
-    label: 'File',
-    submenu: [
-      {
-        label: 'Open',
-        accelerator: 'CmdOrCtrl+O',
-        click: (item, focusedWindow) => {
-          const results = dialog.showOpenDialog({
-            // properties: ['openFile'],
-            properties: ['openDirectory'],
-            // filters: [
-            //   {name: "Markdown", extensions: ["md", "markdown"]}
-            // ]
-          });
-
-          if (!results || !results[0]) return;
-
-          readProject(results[0])
-            .then(data => channel.send(actions.OpenProjectResponse(data)))
-            .catch(e => {
-              console.log(e);
-              channel.send(actions.OpenProjectResponse(e, {error: true}));
-            });
-
-        }
-      }
-    ]
-  },
-  {
     label: 'Edit',
     submenu: [
       {
         label: 'Undo',
         accelerator: 'CmdOrCtrl+Z',
         click: () => {
-          channel.send(actions.Undo());
+          // channel.send(actions.Undo());
         },
         // TODO: disable if there is no history
         enabled: true
@@ -51,7 +22,7 @@ const template = [
         label: 'Redo',
         accelerator: 'Shift+CmdOrCtrl+Z',
         click: () => {
-          channel.send(actions.Redo());
+          // channel.send(actions.Redo());
         },
         // TODO: disable if there is no history
         enabled: true
@@ -114,8 +85,7 @@ const template = [
             return 'Ctrl+Shift+I';
         })(),
         click: function(item, focusedWindow) {
-          if (focusedWindow)
-            focusedWindow.toggleDevTools();
+          channel.send(actions.OpenInspector());
         }
       },
     ]

@@ -3,14 +3,18 @@
 const electron = require("electron");
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
-
+const menu = require("./main-src/lib/menu");
 let mainWindow = null;
 
 app._basePath = 'file://' + __dirname;
 
 
+
 function createWindow () {
+  menu();
   mainWindow = new BrowserWindow({
+    title: "Browser",
+    icon: __dirname + "/firefox.icns",
     width: 800,
     height: 600,
     "title-bar-style": "hidden-inset"
@@ -22,6 +26,8 @@ function createWindow () {
   // mainWindow.setMenuBarVisibility(false);
   // mainWindow.setAutoHideMenuBar(true);
 }
+
+
 
 app.on('ready', () => {
   createWindow();

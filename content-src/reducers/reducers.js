@@ -1,9 +1,4 @@
-const DEFAULT_STATE = {
-  Tabs: {
-    activeTabId: null,
-    rows: new Map()
-  }
-};
+
 
 // TODO: add to utils
 const app = platform_require("electron").remote.app;
@@ -25,8 +20,26 @@ function guid() {
     s4() + '-' + s4() + s4() + s4();
 }
 
+const id = guid();
+const DEFAULT_STATE = {
+  Inspector: {
+    visible: false
+  },
+  Tabs: {
+    activeTabId: id,
+    rows: new Map([[id, defaultTab()]])
+  }
+};
 
 module.exports = {
+  Inspector(prevState = DEFAULT_STATE.Inspector, action) {
+    switch (action.type) {
+      case "NOTIFY_OPEN_INSPECTOR":
+        return {visible: true};
+      default:
+        return prevState;
+    }
+  },
   Tabs(prevState = DEFAULT_STATE.Tabs, action) {
     const rows = new Map(prevState.rows);
     let activeTabId;
