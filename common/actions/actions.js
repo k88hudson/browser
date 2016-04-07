@@ -46,6 +46,9 @@ function RequestExpect(type, expect, options) {
 function OpenInspector() {
   return NotifyContent("NOTIFY_OPEN_INSPECTOR");
 }
+function CloseInspector() {
+  return NotifyContent("NOTIFY_CLOSE_INSPECTOR");
+}
 
 function RemoveTab(id) {
   return {
@@ -72,10 +75,19 @@ function AddTab() {
   return {type: "ADD_TAB"};
 }
 
+function SetUrl(tabId, url) {
+  return {
+    type: "SET_URL",
+    data: {tabId, url}
+  };
+}
+
 module.exports = {
   OpenInspector,
+  CloseInspector,
   RemoveTab,
   SelectTab,
   UpdateTab,
-  AddTab
+  AddTab,
+  SetUrl
 };

@@ -1,4 +1,4 @@
-
+const urlParse = require("url-parse");
 
 // TODO: add to utils
 const app = platform_require("electron").remote.app;
@@ -7,7 +7,8 @@ function defaultTab() {
     url: app._basePath + "/newtab.html",
     displayUrl: "",
     placeholder: "about:newtab",
-    title: ""
+    title: "",
+    loading: false
   };
 }
 function guid() {
@@ -36,6 +37,8 @@ module.exports = {
     switch (action.type) {
       case "NOTIFY_OPEN_INSPECTOR":
         return {visible: true};
+      case "NOTIFY_CLOSE_INSPECTOR":
+        return {visible: false};
       default:
         return prevState;
     }
@@ -44,6 +47,7 @@ module.exports = {
     const rows = new Map(prevState.rows);
     let activeTabId;
     let id;
+    let url;
     switch (action.type) {
       case "ADD_TAB":
         id = guid();
@@ -59,6 +63,25 @@ module.exports = {
       case "SELECT_TAB":
         activeTabId = action.data.id;
         return Object.assign({}, prevState, {activeTabId});
+      case "SET_URL":
+        url = action.data.url;
+        id = action.data.tabId;
+        if (/\s/.test(url) || !/\./.test(url)) {
+          url = "https://google.com?gws_rd=ssl#q=" + encodeURIComponent(url);
+        }
+        const parsed = urlParse(url, "http://");
+        url = parsed.href;
+
+        // No change
+        if (url === rows.get(id).url) {
+          return prevState;
+        }
+        let displayUrl = url.replace(parsed.protocol + "//", "");
+        rows.set(id, Object.assign(rows.get(id), {
+          url,
+          displayUrl
+        }));
+        return Object.assign({}, prevState, {rows});
       default:
         return prevState;
     }

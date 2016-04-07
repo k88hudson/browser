@@ -2,7 +2,6 @@ const React = require("react");
 const {connect} = require("react-redux");
 const classnames = require("classnames")
 const WebView = require("components/WebView");
-const urlParse = require("url-parse");
 const actions = require("common/actions/actions");
 
 const Main = React.createClass({
@@ -20,14 +19,7 @@ const Main = React.createClass({
     this.props.dispatch(actions.UpdateTab(id, newProps));
   },
   setUrl(id, url) {
-    if (/\s/.test(url) || !/\./.test(url)) {
-      url = "https://google.com?gws_rd=ssl#q=" + encodeURIComponent(url);
-    }
-    const parsed = urlParse(url, "http://");
-    url = parsed.href;
-    if (url === this.props.Tabs.rows.get(id).url) return;
-    const displayUrl = url.replace(parsed.protocol + "//", "");
-    this.updateTab(id, {url, displayUrl});
+    this.props.dispatch(actions.SetUrl(id, url));
   },
   addTab() {
     this.props.dispatch(actions.AddTab());
@@ -45,6 +37,7 @@ const Main = React.createClass({
               id={"tab-" + id}
               className={"tab" + (id === activeTabId ? " active" : "")}
               onClick={e => this.setActiveTab(id)}>
+            <span className={classnames("fa fa-spinner fa-spin", {on: tab.loading})} />
             <div className="middle"><div className="title">{tab.title}</div></div>
             <button className="transparent delete" onClick={this.removeTabFactory(id)}>
               <span className="fa fa-times" />

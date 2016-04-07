@@ -5,6 +5,8 @@ $tab-width: 150px;
 $tab-height: 30px;
 $tab-end-width: 28px;
 
+$url-input-height: 25px;
+
 * {
   box-sizing: border-box;
 }
@@ -118,6 +120,7 @@ textarea {
   padding-top: 7px;
   padding-left: 100px;
   .tab {
+    position: relative;
     opacity: 0.5;
     display: flex;
     width: $tab-width;
@@ -142,6 +145,17 @@ textarea {
       left: 100%;
       background-image: url(img/tab-right-2x.png);
     }
+    .fa.fa-spinner {
+      color: #3476DC;
+      position: absolute;
+      top: 9px;
+      left: -3px;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      &.on {
+        opacity: 1;
+      }
+    }
     .middle {
       width: $tab-width;
       height: $tab-height;
@@ -151,7 +165,7 @@ textarea {
       border-top: 1px solid transparent;
       background-size: contain;
       background-repeat: repeat-x;
-      padding-right: 5px;
+      padding-right: 8px;
       .title {
         white-space: nowrap;
         text-overflow: ellipsis;
@@ -167,6 +181,7 @@ textarea {
       &::after,
       &::before {
         opacity: 1;
+        pointer-events: none;
       }
     }
     &.active {
@@ -184,7 +199,7 @@ textarea {
       position: absolute;
       right: -10px;
       top: 5px;
-      opacity: 0.5;
+      color: #B6B6B6;
       padding: 3px;
     }
     &.active:hover {
@@ -203,7 +218,7 @@ textarea {
   position: relative;
   border-bottom: 1px solid #B3B3B3;
   .back-button {
-    $button-size: 35px;
+    $button-size: 32px;
     -webkit-appearance: none;
     appearance: none;
     position: absolute;
@@ -222,7 +237,9 @@ textarea {
     border-color: #AEAEAE;
   }
   input {
+    font-size: 13px;
     padding-left: 20px;
+    height: $url-input-height;
     border-bottom-color: #ACACAC;
     &:focus {
       border-color: #1388F9;
@@ -239,12 +256,53 @@ textarea {
   }
 }
 
+.toolbar-area {
+  display: flex;
+  > form {
+    flex-grow: 1;
+  }
+  .toolbar {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 0 3px;
+    display: flex;
+    li {
+      display: inline-block;
+      button {
+        color: lighten(#4D4D4D, 10%);
+        height: $url-input-height;
+        padding: 0 3px;
+        transition: all 0.2s ease;
+        border: 1px solid transparent;
+        font-size: 18px;
+        &:hover {
+          color: #4D4D4D;
+          border-color: rgba(black, 0.2);
+        }
+      }
+    }
+  }
+}
+
 .inspector {
-  padding: 20px;
   background: #282C34;
   color: #ABB2C0;
   font-family: menlo;
   font-size: 12px;
+  button {
+    padding: 5px 8px;
+    background: #282C34;
+    border-color: black;
+  }
+  header {
+    text-align: right;
+    padding: 5px;
+    background: darken(#282C34, 5%);
+    border-bottom: 1px solid black;
+  }
+  main {
+    padding: 20px;
+  }
   pre {
     font-family: inherit;
     width: 100%;
