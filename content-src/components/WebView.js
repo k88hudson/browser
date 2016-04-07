@@ -29,10 +29,16 @@ const WebView = React.createClass({
     });
     this.refs.webview.addEventListener("console-message", e => {
       if (!/^read-dom/.test(e.message)) return;
-      const htmlText = JSON.parse(e.message.replace(/^read-dom/, ""));
-      // console.log(htmlText);
-      this.props.updateTab({title: htmlText.title});
-      this.setState({metadata: htmlText});
+
+    });
+
+    this.refs.webview.addEventListener('ipc-message', event => {
+      if (event.channel === "read-dom") {
+        const htmlText = JSON.parse(event.args[0]);
+        console.log(htmlText);
+        this.props.updateTab({title: htmlText.title});
+        this.setState({metadata: htmlText});
+      }
     });
 
     this.refs.webview.addEventListener("dom-ready", e => {
@@ -51,24 +57,6 @@ const WebView = React.createClass({
       console.log(e);
     });
 
-    this.refs.webview.addEventListener("did-get-response-details", e => {
-      console.log("event", e);
-      this.refs.webview.executeJavaScript(`
-        (function() {
-          const favicon = document.querySelector('link[rel="shortcut icon"]');
-          const ogimage = document.querySelector('meta[property="og:image"]');
-          const data = {
-            title: document.title,
-            url: document.location.href,
-            favicon: favicon && favicon.href,
-            ogimage: ogimage && ogimage.content,
-            fullText: document.documentElement.innerHTML
-          };
-          console.log("read-dom" + JSON.stringify(data));
-        })()
-
-      `);
-    });
   },
   render() {
     const buttons = [
@@ -99,6 +87,7 @@ const WebView = React.createClass({
       <webview ref="webview"
         className="webview"
         src={this.props.url}
+        preload="./main-src/webview-preload.js"
         autosize="on" />
       <div hidden={!this.props.Inspector.visible} className="inspector">
         <header>

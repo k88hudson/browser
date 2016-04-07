@@ -4,7 +4,8 @@ const urlParse = require("url-parse");
 const app = platform_require("electron").remote.app;
 function defaultTab() {
   return {
-    url: app._basePath + "/newtab.html",
+    // url: "app._basePath + "/newtab.html",
+    url: "https://google.ca",
     displayUrl: "",
     placeholder: "about:newtab",
     title: "",
@@ -24,7 +25,7 @@ function guid() {
 const id = guid();
 const DEFAULT_STATE = {
   Inspector: {
-    visible: false
+    visible: true
   },
   Tabs: {
     activeTabId: id,
