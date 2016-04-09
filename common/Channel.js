@@ -37,7 +37,6 @@ class Channel {
 
   connectStore(store) {
     this.messager.on(this.options.incoming, (e, details) => {
-      console.log(e, details);
       store.dispatch(details);
     });
   }

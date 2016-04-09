@@ -25,7 +25,7 @@ function guid() {
 const id = guid();
 const DEFAULT_STATE = {
   Inspector: {
-    visible: true
+    visible: false
   },
   Tabs: {
     activeTabId: id,

@@ -1,7 +1,7 @@
 const React = require("react");
 const {connect} = require("react-redux");
 const classnames = require("classnames")
-const WebView = require("components/WebView");
+const Browser = require("components/Browser");
 const actions = require("common/actions/actions");
 
 const Main = React.createClass({
@@ -48,7 +48,7 @@ const Main = React.createClass({
       </div>
       {tabIds.map(id => {
         const tab = tabs.get(id);
-        return (<WebView
+        return (<Browser
           key={id}
           id={id}
           {...tab}
