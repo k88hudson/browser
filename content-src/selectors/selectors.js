@@ -10,7 +10,6 @@ function createSelector(name, ...args) {
   return function select() {
     const result = selector.apply(null, arguments);
     console.groupCollapsed(` selector ${name}`);
-    console.log(result);
     console.groupEnd();
     return result;
   };

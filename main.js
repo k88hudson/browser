@@ -4,6 +4,7 @@ const electron = require("electron");
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 const menu = require("./main-src/lib/menu");
+
 let mainWindow = null;
 
 app._basePath = 'file://' + __dirname;

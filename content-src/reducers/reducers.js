@@ -1,15 +1,25 @@
 const urlParse = require("url-parse");
+const {awesomeBarToUrl, getDisplayUrl} = require("common/browserUtils");
 
 // TODO: add to utils
 const app = platform_require("electron").remote.app;
 function defaultTab() {
   return {
     // url: "app._basePath + "/newtab.html",
-    url: "https://google.ca",
+    url: "https://www.google.ca",
     displayUrl: "",
     placeholder: "about:newtab",
     title: "",
-    loading: false
+
+    // is the page currently loading?
+    loading: false,
+
+    // did it fail
+    error: false,
+
+    // metadata
+    isBookmark: false
+
   };
 }
 function guid() {
@@ -47,6 +57,7 @@ module.exports = {
   Tabs(prevState = DEFAULT_STATE.Tabs, action) {
     const rows = new Map(prevState.rows);
     let activeTabId;
+    let currentTab;
     let id;
     let url;
     switch (action.type) {
@@ -65,23 +76,27 @@ module.exports = {
         activeTabId = action.data.id;
         return Object.assign({}, prevState, {activeTabId});
       case "SET_URL":
-        url = action.data.url;
+        url = awesomeBarToUrl(action.data.url);
         id = action.data.tabId;
-        if (/\s/.test(url) || !/\./.test(url)) {
-          url = "https://google.com?gws_rd=ssl#q=" + encodeURIComponent(url);
-        }
-        const parsed = urlParse(url, "http://");
-        url = parsed.href;
 
         // No change
         if (url === rows.get(id).url) {
           return prevState;
         }
-        let displayUrl = url.replace(parsed.protocol + "//", "");
+        let displayUrl = getDisplayUrl(url);
         rows.set(id, Object.assign(rows.get(id), {
           url,
           displayUrl
         }));
+        return Object.assign({}, prevState, {rows});
+      case "RESPONSE_METADATA":
+        rows.forEach(tab => {
+          if (action.data.url === tab.url) {
+            tab.isBookmark = action.data.isBookmark;
+          } else {
+            return tab;
+          }
+        });
         return Object.assign({}, prevState, {rows});
       default:
         return prevState;

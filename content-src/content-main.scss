@@ -110,6 +110,17 @@ textarea {
 .webview-container {
   flex-grow: 1;
   position: relative;
+
+  &.load-fail {
+    background: #F0F0F0;
+    color: lighten(#4D4D4D, 10%);
+    font-size: 18px;
+    font-weight: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   webview {
     position: absolute;
     top: 0;
@@ -226,6 +237,7 @@ textarea {
   position: relative;
   border-bottom: 1px solid #B3B3B3;
   .back-button {
+    z-index: 1;
     $button-size: 32px;
     -webkit-appearance: none;
     appearance: none;
@@ -266,9 +278,20 @@ textarea {
 
 .toolbar-area {
   display: flex;
-  > form {
+  .input-container {
     flex-grow: 1;
+    position: relative;
+    .refresh-btn {
+      position: absolute;
+      right: 0;
+      top: 0;
+      height: $url-input-height;
+      padding: 0 10px;
+      border: 0;
+      background: none;
+    }
   }
+
   .toolbar {
     list-style: none;
     padding: 0;

@@ -1,6 +1,6 @@
 "use strict";
 const ActionCreators = require("redux-undo").ActionCreators;
-
+const normalizeUrl = require("../browserUtils").normalizeUrl;
 const OUTGOING_EVENT = "content-to-main";
 const INCOMING_EVENT = "main-to-content";
 
@@ -14,6 +14,18 @@ function NotifyContent(type, data) {
   }
   return action;
 }
+
+function NotifyAddon(type, data) {
+  const action = {
+    type,
+    meta: {broadcast: OUTGOING_EVENT}
+  };
+  if (data) {
+    action.data = data;
+  }
+  return action;
+}
+
 
 function Response(type, data, options) {
   options = options || {};
@@ -82,12 +94,35 @@ function SetUrl(tabId, url) {
   };
 }
 
+function CreateBookmark(url) {
+  return NotifyAddon("NOTIFY_CREATE_BOOKMARK", normalizeUrl(url));
+}
+
+function RemoveBookmark(url) {
+  return NotifyAddon("NOTIFY_REMOVE_BOOKMARK", normalizeUrl(url));
+}
+
+
+function RequestBookmarks() {
+  return RequestExpect("REQUEST_BOOKMARKS", "RESPONSE_BOOKMARKS");
+}
+
+function RequestMetaData(url) {
+  return RequestExpect("REQUEST_METADATA", "RESPONSE_METADATA", {data: normalizeUrl(url)});
+}
+
 module.exports = {
+  RequestExpect,
+  Response,
   OpenInspector,
   CloseInspector,
   RemoveTab,
   SelectTab,
   UpdateTab,
   AddTab,
-  SetUrl
+  SetUrl,
+  CreateBookmark,
+  RemoveBookmark,
+  RequestBookmarks,
+  RequestMetaData
 };

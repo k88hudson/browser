@@ -24,6 +24,9 @@ const Main = React.createClass({
   addTab() {
     this.props.dispatch(actions.AddTab());
   },
+  componentDidMount() {
+    this.props.dispatch(actions.RequestBookmarks());
+  },
   render() {
     const tabs = this.props.Tabs.rows;
     const activeTabId = this.props.Tabs.activeTabId;
